@@ -1,0 +1,10 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: mcpo-time
+  namespace: kube-system
+spec:
+  chart: oci://registry-1.docker.io/systemj/mcpo-time
+  targetNamespace: mcpo
+  createNamespace: true
+  version: 0.1.0

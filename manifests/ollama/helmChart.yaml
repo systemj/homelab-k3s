@@ -1,0 +1,35 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: ollama
+  namespace: kube-system
+spec:
+  repo: https://helm.otwld.com/
+  chart: ollama
+  targetNamespace: ollama
+  createNamespace: true
+  version: 1.37.0
+  valuesContent: |-
+    runtimeClassName: "nvidia"
+    ingress:
+      enabled: true
+      className: "traefik"
+      hosts:
+      - host: ollama.lab.systemj.net
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+      tls:
+      - secretName: lab-systemj-net-wildcard
+        hosts:
+        - ollama.lab.systemj.net
+    ollama:
+      models:
+        run:
+        - "deepseek-r1:8b"
+        - "qwen2.5-coder:7b"
+    persistentVolume:
+      enabled: true
+    extraEnv:
+    - name: OLLAMA_CONTEXT_LENGTH
+      value: "16384"

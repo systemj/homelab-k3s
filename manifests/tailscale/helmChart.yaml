@@ -1,0 +1,15 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: tailscale-operator
+  namespace: kube-system
+spec:
+  repo: https://pkgs.tailscale.com/helmcharts
+  chart: tailscale-operator
+  targetNamespace: tailscale
+  createNamespace: true
+  version: 1.92.5
+  valuesContent: |-
+    oauth:
+      clientId: "client-id"
+      clientSecret: "client-secret"

@@ -1,0 +1,11 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: reflector
+  namespace: kube-system
+spec:
+  repo: https://emberstack.github.io/helm-charts
+  chart: reflector
+  targetNamespace: reflector
+  createNamespace: true
+  version: v9.1.45

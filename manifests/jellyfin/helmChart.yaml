@@ -1,0 +1,48 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: jellyfin
+  namespace: kube-system
+spec:
+  repo: https://jellyfin.github.io/jellyfin-helm
+  chart: jellyfin
+  targetNamespace: jellyfin
+  createNamespace: true
+  version: 2.7.0
+  valuesContent: |-
+    ingress:
+      enabled: true
+      className: "traefik"
+      hosts:
+      - host: jellyfin.lab.systemj.net
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+      tls:
+      - secretName: lab-systemj-net-wildcard
+        hosts:
+          - jellyfin.lab.systemj.net
+    volumes:
+    - name: host-config
+      hostPath:
+        path: /data/jellyfin/config
+    volumeMounts:
+    - name: host-config
+      mountPath: "/host-config"
+    jellyfin:
+      env:
+        - name: JELLYFIN_CONFIG_DIR
+          value: /host-config/config
+        - name: JELLYFIN_DATA_DIR
+          value: /host-config
+    persistence:
+      config:
+        enabled: false
+      media:
+        enabled: true
+        type: hostPath
+        hostPath: "/data/jellyfin/media"
+      cache:
+        enabled: true
+        type: hostPath
+        hostPath: "/data/jellyfin/cache"

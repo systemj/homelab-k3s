@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: digitalocean-dns
+  namespace: cert-manager
+stringData:
+  access-token: "access-token"
+type: Opaque
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lab-systemj-net-wildcard
+  namespace: cert-manager
+spec:
+  secretName: lab-systemj-net-wildcard
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  dnsNames:
+  - "*.lab.systemj.net"
+  - "lab.systemj.net"
+  secretTemplate:
+    annotations:
+      # sync to multiple namespaces via reflector
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "\
+        jellyfin,\
+        ollama,\
+        open-webui,\
+        "
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    email: email@example.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+      - dns01:
+          digitalocean:
+            tokenSecretRef:
+              name: digitalocean-dns
+              key: access-token
+        selector:
+          dnsZones:
+            - "lab.systemj.net"
