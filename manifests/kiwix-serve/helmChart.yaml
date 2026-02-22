@@ -1,0 +1,27 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: kiwix-serve
+  namespace: kube-system
+spec:
+  chart: oci://registry-1.docker.io/systemj/kiwix-serve
+  targetNamespace: kiwix-serve
+  createNamespace: true
+  version: 0.1.0
+  valuesContent: |-
+    ingress:
+      enabled: true
+      className: "traefik"
+      hosts:
+      - host: kiwix.lab.systemj.net
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+      tls:
+      - secretName: lab-systemj-net-wildcard
+        hosts:
+          - kiwix.lab.systemj.net
+    volumes:
+    - name: data
+      hostPath:
+        path: /data/kiwix
