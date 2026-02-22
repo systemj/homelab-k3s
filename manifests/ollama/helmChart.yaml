@@ -27,9 +27,8 @@ spec:
       models:
         run:
         - "deepseek-r1:8b"
-        - "qwen2.5-coder:7b"
     persistentVolume:
       enabled: true
     extraEnv:
     - name: OLLAMA_CONTEXT_LENGTH
-      value: "16384"
+      value: "32768"
