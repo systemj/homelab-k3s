@@ -8,7 +8,7 @@ spec:
   chart: open-webui
   targetNamespace: open-webui
   createNamespace: true
-  version: 12.3.0
+  version: 12.5.0
   valuesContent: |-
     ollama:
       enabled: false

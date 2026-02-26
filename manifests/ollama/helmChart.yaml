@@ -8,7 +8,7 @@ spec:
   chart: ollama
   targetNamespace: ollama
   createNamespace: true
-  version: 1.37.0
+  version: 1.45.0
   valuesContent: |-
     runtimeClassName: "nvidia"
     ingress:
