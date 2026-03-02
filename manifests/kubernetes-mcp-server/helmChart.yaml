@@ -1,0 +1,25 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: kubernetes-mcp-server
+  namespace: kube-system
+spec:
+  chart: oci://ghcr.io/containers/charts/kubernetes-mcp-server
+  targetNamespace: kubernetes-mcp-server
+  createNamespace: true
+  version: 0.1.0
+  valuesContent: |-
+    rbac:
+      extraClusterRoleBindings:
+      - name: use-cluster-admin
+        roleRef:
+          name: cluster-admin
+          external: true
+    ingress:
+      enabled: true
+      className: "traefik"
+      host: kubernetes-mcp-server.lab.systemj.net
+      tls:
+        secretName: lab-systemj-net-wildcard
+    config:
+      read_only: true
